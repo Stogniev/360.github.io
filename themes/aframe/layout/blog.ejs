@@ -1,0 +1,89 @@
+<aside class="sidebar borderless-links">
+  <%- partial('partials/secondary/sidebar_header', {site: site}) %>
+
+  <div class="list">
+  </div>
+</aside>
+
+<div class="content content--blog copy post">
+  <div class="copy__wrap">
+    <% if (page.blog_index) { %>
+      <h1 class="page__title"><%- config.blog_title %></h1>
+
+      <%- page.content %>
+
+      <% site.posts.sort('date', -1).each(function (post) { %>
+        <article class="post post-listing">
+          <a href="<%- page_url(post.path) %>">
+            <h2 class="post__heading"><%- post.title %></h2>
+          </a>
+          <%- partial('partials/blog/metadata', {post: post}) %>
+
+          <% if (post.awoa) { %>
+            <p>What's up with A-Frame for the week of <%= blog_date_subtract_week(post.date) %> to <%= blog_date(post.date) %>.</p>
+            <%- partial('partials/blog/awoa_projects_showcase', {
+              projects: post.awoa.projects
+            }) %>
+          <% } %>
+
+          <% if (!post.awoa) { %>
+            <%- partial('partials/blog/image', {image: post.image, title: post.title}) %>
+            <div class="post__excerpt"><%- post.excerpt %></div>
+          <% } %>
+
+          <a href="<%- page_url(post.path) %>" class="post__more">Read more &hellip;</a>
+        </article>
+      <% }) %>
+
+    <% } else { %>
+      <article class="post post-full">
+        <h1 class="hidden-visually"><%- config.blog_title %></h1>
+        <h2 class="post__heading"><%- page.title %></h2>
+        <%- partial('partials/blog/metadata', {post: page}) %>
+
+        <% if (page.awoa) { %>
+          <p>What's up with A-Frame for the week of <%= blog_date_subtract_week(page.date) %> to <%= blog_date(page.date) %>.</p>
+          <p>A-Frame is a WebVR framework for building virtual reality experiences with HTML.</p>
+          <%- partial('partials/blog/awoa_projects_showcase', {
+            projects: page.awoa.projects
+          }) %>
+        <% } %>
+
+        <%- partial('partials/blog/image', {image: page.image, title: page.title}) %>
+
+        <%- page.content %>
+
+        <% if (page.awoa) { %>
+          <%- partial('partials/blog/awoa_projects_text', {projects: page.awoa.projects}) %>
+          <%- partial('partials/blog/awoa_media',
+                      {media: page.awoa.media}) %>
+          <%- partial('partials/blog/awoa_contributions',
+                      {contributions: page.awoa.contributions}) %>
+        <% } %>
+
+        <% if (page.author) { %>
+          <p class="post__author_footer">By <%- blog_attribution(page.author) %></p>
+        <% } %>
+      </article>
+
+      <footer class="footer guide-links c">
+        <% // Yes, these are correct. %>
+        <% var prevPost = page.next %>
+        <% var nextPost = page.prev %>
+        <% if (prevPost) { %>
+          <span class="float-left"><a href="<%- page_url(prevPost.path) %>" class="guide-link guide-link-left">← <%- prevPost.title %></a></span>
+        <% } %>
+        <% if (nextPost) { %>
+          <span class="float-right"><a href="<%- page_url(nextPost.path) %>" class="guide-link guide-link-right"><%- nextPost.title %> →</a></span>
+        <% } %>
+      </footer>
+    <% } %>
+
+    <footer class="footer footnote">
+      <p>Except where otherwise noted, content on this site is licensed under the <a href="https://creativecommons.org/licenses/by-sa/3.0/" rel="external">Creative Commons Attribution Share-Alike License v3.0</a> or any later version.</p>
+      <% if (!page.blog_index) { %>
+        <p>Caught a mistake? <br><br> <a href="<%- website_github_edit_url('_posts/' + page.slug + '.md') %>" class="github-file-link" rel="external">Suggest an edit to this post on GitHub</a></p>
+      <% } %>
+    </footer>
+  </div>
+</div>

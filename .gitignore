@@ -1,0 +1,10 @@
+*.log
+.DS_Store
+.deploy*/
+Thumbs.db
+db.json
+node_modules/
+npm-debug*.log
+public/
+src/_drafts
+.multidep
